@@ -4,14 +4,12 @@ const Post = require('./models/Post');
 
 const port = 8000;
 const app = express();
+app.use(express.json());
 // Connect to MongoDB database
 mongoose
   .connect('mongodb://localhost:27017/myBlog', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
-  .then(() => {
-    app.use(express.json());
   });
 
 // FIND ALL POSTS
@@ -72,9 +70,7 @@ app.put('/api/post/:id', async (req, res) => {
     .then((result) => {
       console.log(result);
       if (result.nModified === 1) {
-        res
-          .status(202)
-          .send({ message: 'Post was updated successfully.' });
+        res.status(202).send({ message: 'Post was updated successfully.' });
       } else {
         res.status(404).send({
           message: `Cannot updated Post!`,
