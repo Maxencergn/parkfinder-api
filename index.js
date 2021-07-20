@@ -33,7 +33,7 @@ app.get('/api/posts/:id', async (req, res) => {
 });
 
 // CREATE A NEW POST
-app.post('/api/post', async (req, res) => {
+app.post('/api/posts', async (req, res) => {
   const posts = new Post({
     title: req.body.title,
     content: req.body.content,
@@ -57,7 +57,7 @@ app.post('/api/post', async (req, res) => {
 });
 
 // MODIFY A POST BY ID
-app.put('/api/post/:id', async (req, res) => {
+app.put('/api/posts/:id', async (req, res) => {
   const id = req.params.id;
   const objectId = { _id: id };
   const updatePost = {
@@ -81,7 +81,7 @@ app.put('/api/post/:id', async (req, res) => {
 });
 
 // DELETE A POST BY ID
-app.delete('/api/post/:id', async (req, res) => {
+app.delete('/api/posts/:id', async (req, res) => {
   const id = req.params.id;
   const objectId = { _id: id };
   await Post.findOneAndDelete(objectId)
