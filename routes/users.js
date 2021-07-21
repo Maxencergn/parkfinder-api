@@ -3,32 +3,7 @@ const Users = require('../models/Users');
 const router = express.Router();
 const Bcrypt = require('bcrypt');
 
-/* // CREATE A NEW USER
-router.post('/signin', async (req, res) => {
-  const users = new Users({
-    userName: req.body.userName,
-    password: req.body.password,
-    city: req.body.city,
-    parkAdded: req.body.parkAdded,
-  });
-  await users
-    .save()
-    .then((data) => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot create user!`,
-        });
-      } else {
-        res.send({ message: 'user was created successfully.' });
-      }
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message: 'Error creating user',
-      });
-    });
-}); */
-
+// CREATE A NEW USER
 router.post('/register', async (req, res) => {
   try {
     const hashedPwd = await Bcrypt.hash(req.body.password, 10);
@@ -45,6 +20,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
+// REGISTER A USER
 router.post('/login', async (req, res) => {
   try {
     const user = await Users.findOne({ userName: req.body.userName });
