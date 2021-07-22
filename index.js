@@ -1,11 +1,22 @@
 const express = require('express');
 const app = express();
+const cors = require('cors');
 
 require('dotenv').config();
 const mongoose = require('mongoose');
 const routes = require('./routes/index')
 
 const port = 8000;
+
+const { DEV_URL } = process.env;
+
+app.use(
+  cors({
+    origin: [DEV_URL],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
+);
 
 app.use(express.json());
 const { DB_URL } = process.env;
