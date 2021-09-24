@@ -22,6 +22,7 @@ app.use(express.json());
 const { DB_URL } = process.env;
 // Connect to MongoDB database
 mongoose.connect(DB_URL, {
+  useCreateIndex: true,
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });

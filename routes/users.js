@@ -2,6 +2,9 @@ const express = require('express');
 const Users = require('../models/Users');
 const router = express.Router();
 const Bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+const { JWT_AUTH_SECRET } = process.env;
 
 // FIND ALL USERS
 router.get('/', async (req, res) => {
@@ -22,39 +25,52 @@ router.post('/register', async (req, res) => {
       city: req.body.city,
       parkAdded: req.body.parkAdded,
     });
-    if (users.userName.length > 1 && users.password.length > 1 && users.city.length > 1) {
+    if (users.userName.length === 0) {
+      res.status(404).send({ message: 'You need to add a username !' });
+    } else if (users.password.length === 0) {
+      res.status(404).send({ message: 'You need to add a password !' });
+    } else if (users.city.length === 0) {
+      res.status(404).send({ message: 'You need to add your city !' });
+    } else {
       const insertResult = await Users.create(users);
       res.send(insertResult);
-    } else {
-      res.status(404).send({ message: 'One of the input is empty !' });
     }
   } catch (error) {
-    res
-      .status(500)
-      .send({
-        message:
-          'Internal Server error Occured, or you tring to enter name that already exist !',
-      });
+    res.status(500).send({
+      message: error.message,
+    });
   }
 });
 
 // REGISTER A USER
+
 router.post('/login', async (req, res) => {
   try {
-    const user = await Users.findOne({ userName: req.body.userName });
-    if (user) {
-      const cmp = await Bcrypt.compare(req.body.password, user.password);
-      if (cmp) {
-        //   ..... further code to maintain authentication like jwt or sessions
-        res.send('Auth Successful');
+    if (!req.body.userName || !req.body.password) {
+      res
+        .status(400)
+        .json({ errorMessage: 'Please specify both username and password' });
+    } else {
+      const user = await Users.findOne({ userName: req.body.userName });
+      if (user) {
+        const cmp = await Bcrypt.compare(req.body.password, user.password);
+        if (cmp) {
+          //   ..... further code to maintain authentication like jwt or sessions
+          const token = jwt.sign({ userName: user.userName }, JWT_AUTH_SECRET, {
+            expiresIn: 60 * 60 * 24,
+          });
+          res.status(200).json({ user, token });
+        } else {
+          res.send('Wrong username or password.');
+        }
       } else {
         res.send('Wrong username or password.');
       }
-    } else {
-      res.send('Wrong username or password.');
     }
   } catch (error) {
-    res.status(500).send('Internal Server error Occured');
+    res.status(500).send({
+      message: error.message,
+    });
   }
 });
 

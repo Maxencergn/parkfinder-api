@@ -1,9 +1,32 @@
 const express = require('express');
 const Skateparks = require('../models/Skateparks');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+
+const { JWT_AUTH_SECRET } = process.env;
+
+// MIDDLEWARE AUTH
+const authenticateWithJsonWebToken = (req, res, next) => {
+  if (req.headers.authorization !== undefined) {
+    const token = req.headers.authorization.split(' ')[1];
+    jwt.verify(token, JWT_AUTH_SECRET, (err) => {
+      if (err) {
+        res
+          .status(401)
+          .json({ errorMessage: "you're not allowed to access these data" });
+      } else {
+        next();
+      }
+    });
+  } else {
+    res
+      .status(401)
+      .json({ errorMessage: "you're not allowed to access these data!" });
+  }
+};
 
 // FIND ALL SKATEPARKS
-router.get('/', async (req, res) => {
+router.get('/', authenticateWithJsonWebToken, async (req, res) => {
   const skateparks = await Skateparks.find()
     .then((result) => {
       res.send(result);
