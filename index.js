@@ -6,7 +6,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const routes = require('./routes/index')
 
-const port = 8000;
+const port = process.env.PORT;
 
 const { DEV_URL } = process.env;
 
