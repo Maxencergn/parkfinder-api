@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 const Skateparks = require('../models/Skateparks');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
