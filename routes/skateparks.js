@@ -9,10 +9,10 @@ const { JWT_AUTH_SECRET } = process.env;
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
-    cb(null, './uploads/');
+    cb(null, './uploads');
   },
   filename: function(req, file, cb) {
-    cb(null, file.parkImage);
+    cb(null, file.originalname);
   }
 });
 
@@ -49,17 +49,20 @@ router.get('/', /* authenticateWithJsonWebToken, */ async (req, res) => {
 
 // CREATE A NEW SKATEPARK
 router.post('/', upload.single('parkImage'), async (req, res) => {
-  const skateparks = new Skateparks({
+  const file = req.file;
+  console.log(file);
+  const skateparks = new Skateparks({ 
     name: req.body.name,
     description: req.body.description,
     adress: req.body.adress,
     city: req.body.city,
     postalCode: req.body.postalCode,
-    userWhoCreate: req.body.userId,
+    image: req.file.path,
   });
   await skateparks
     .save()
     .then((data) => {
+      console.log(data)
       if (!data) {
         res.status(404).send({
           message: `Cannot create skatepark!`,
