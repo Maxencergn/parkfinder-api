@@ -3,9 +3,20 @@ const multer = require('multer');
 const Skateparks = require('../models/Skateparks');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const upload = multer({ dest: 'uploads/' })
+
 
 const { JWT_AUTH_SECRET } = process.env;
+
+const storage = multer.diskStorage({
+  destination: function(req, file, cb) {
+    cb(null, './uploads/');
+  },
+  filename: function(req, file, cb) {
+    cb(null, file.buffer.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
 
 // MIDDLEWARE AUTH
 const authenticateWithJsonWebToken = (req, res, next) => {
@@ -37,7 +48,7 @@ router.get('/', /* authenticateWithJsonWebToken, */ async (req, res) => {
 });
 
 // CREATE A NEW SKATEPARK
-router.post('/', upload.single('parkimage'), async (req, res) => {
+router.post('/', upload.single('parkImage'), async (req, res) => {
   const skateparks = new Skateparks({
     name: req.body.name,
     description: req.body.description,
