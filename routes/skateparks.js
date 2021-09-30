@@ -2,6 +2,7 @@ const express = require('express');
 const Skateparks = require('../models/Skateparks');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const upload = multer({ dest: 'uploads/' })
 
 const { JWT_AUTH_SECRET } = process.env;
 
@@ -35,12 +36,13 @@ router.get('/', /* authenticateWithJsonWebToken, */ async (req, res) => {
 });
 
 // CREATE A NEW SKATEPARK
-router.post('/', async (req, res) => {
+router.post('/', upload.single('parkImage'), async (req, res) => {
   const skateparks = new Skateparks({
     name: req.body.name,
     description: req.body.description,
-    urlImage: req.body.urlImage,
-    place: req.body.place,
+    adress: req.body.adress,
+    city: req.body.city,
+    postalCode: req.body.postalCode,
     userWhoCreate: req.body.userId,
   });
   await skateparks

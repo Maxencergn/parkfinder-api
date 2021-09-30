@@ -43,7 +43,6 @@ router.post('/register', async (req, res) => {
 });
 
 // REGISTER A USER
-
 router.post('/login', async (req, res) => {
   try {
     if (!req.body.userName || !req.body.password) {
