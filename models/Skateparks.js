@@ -7,7 +7,6 @@ const schema = mongoose.Schema({
   adress: String,
   postalCode: Number,
   userWhoCreate: Number,
-  parkimage: String,
 });
 
 module.exports = mongoose.model("Skateparks", schema);
