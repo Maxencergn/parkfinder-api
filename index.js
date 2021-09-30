@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-api.use(express.static('uploads'));
+app.use(express.static('uploads'));
 
 app.use(express.json());
 const { DB_URL } = process.env;
