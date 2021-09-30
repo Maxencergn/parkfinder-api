@@ -26,7 +26,7 @@ const authenticateWithJsonWebToken = (req, res, next) => {
 };
 
 // FIND ALL SKATEPARKS
-router.get('/', authenticateWithJsonWebToken, async (req, res) => {
+router.get('/', /* authenticateWithJsonWebToken, */ async (req, res) => {
   const skateparks = await Skateparks.find()
     .then((result) => {
       res.send(result);
