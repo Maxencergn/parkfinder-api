@@ -37,7 +37,7 @@ router.get('/', /* authenticateWithJsonWebToken, */ async (req, res) => {
 });
 
 // CREATE A NEW SKATEPARK
-router.post('/', upload.single('parkImage'), async (req, res) => {
+router.post('/', upload.single('parkimage'), async (req, res) => {
   const skateparks = new Skateparks({
     name: req.body.name,
     description: req.body.description,
