@@ -49,15 +49,14 @@ router.get('/', /* authenticateWithJsonWebToken, */ async (req, res) => {
 
 // CREATE A NEW SKATEPARK
 router.post('/', upload.single('parkImage'), async (req, res) => {
-  const file = req.file;
-  console.log(file);
+  console.log(req.file);
   const skateparks = new Skateparks({ 
     name: req.body.name,
     description: req.body.description,
     adress: req.body.adress,
     city: req.body.city,
     postalCode: req.body.postalCode,
-    image: req.file.path,
+    image: req.file.originalname,
   });
   await skateparks
     .save()
