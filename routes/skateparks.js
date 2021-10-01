@@ -3,6 +3,7 @@ const multer = require('multer');
 const Skateparks = require('../models/Skateparks');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
 
 
 const { JWT_AUTH_SECRET } = process.env;
@@ -56,7 +57,7 @@ router.post('/', upload.single('parkImage'), async (req, res) => {
     adress: req.body.adress,
     city: req.body.city,
     postalCode: req.body.postalCode,
-    image: req.file.originalname,
+    image: 'https://skatepark-database.herokuapp.com/' + req.file.originalname,
   });
   await skateparks
     .save()
@@ -96,9 +97,10 @@ router.put('/:id', async (req, res) => {
     $set: {
       name: req.body.name,
       description: req.body.description,
-      urlImage: req.body.urlImage,
-      place: req.body.place,
-      userWhoCreate: req.body.userId,
+      adress: req.body.adress,
+      city: req.body.city,
+      postalCode: req.body.postalCode,
+      image: req.file.originalname,
     },
   };
   await Skateparks.updateOne(objectId, skateparks)
